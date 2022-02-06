@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net40</TargetFrameworks>
+     
+    <AssemblyName>MQTTnet</AssemblyName>
+    <RootNamespace>MQTTnet</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Company />
+    <Product />
+    <Description />
+    <Authors />
+    <PackageId>AZ.MQTTnet.Net4FX</PackageId>
+    <SignAssembly>false</SignAssembly>
+    <DelaySign>false</DelaySign>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
+  </PropertyGroup>
+
+   
+
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+    <DebugType>Full</DebugType>
+  </PropertyGroup>
+
+   
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net40|AnyCPU'">
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+
+   
+
+  <ItemGroup>
+    <Compile Remove="Implementations\MqttWebSocketChannel.cs" />
+  </ItemGroup>
+
+   
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Bcl.Async" Version="1.0.168" />
+  </ItemGroup>
+ 
+ 
+
+</Project>
