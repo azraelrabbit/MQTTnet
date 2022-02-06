@@ -572,6 +572,7 @@ namespace MQTTnet.Extensions.ManagedClient
 
             try
             {
+                Console.WriteLine("[BBBBBBBBBB] : Connecting async");
                 var result = await InternalClient.ConnectAsync(Options.ClientOptions, cancellationToken).ConfigureAwait(false);
                 return result.IsSessionPresent ? ReconnectionResult.Recovered : ReconnectionResult.Reconnected;
             }

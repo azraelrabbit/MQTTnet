@@ -18,7 +18,15 @@ namespace MQTTnet.Implementations
 
         public IMqttChannelAdapter CreateClientAdapter(IMqttClientOptions options)
         {
-            if (options == null) throw new ArgumentNullException(nameof(options));
+
+
+            if (options == null)
+            {
+                Console.WriteLine("[CCCCCCCC] :   _adapterFactory  opttions is null");
+                throw new ArgumentNullException(nameof(options));
+            }
+
+            Console.WriteLine("[CCCCCCCC] :   ---1");
 
             IMqttChannel channel;
             switch (options.ChannelOptions)
@@ -41,7 +49,10 @@ namespace MQTTnet.Implementations
                     }
             }
 
+            Console.WriteLine("[CCCCCCCC] :   -002 ");
             var packetFormatterAdapter = new MqttPacketFormatterAdapter(options.ProtocolVersion, new MqttPacketWriter());
+
+            Console.WriteLine("[CCCCCCCC] :   -003 ");
             return new MqttChannelAdapter(channel, packetFormatterAdapter, options.PacketInspector, _logger);
         }
     }

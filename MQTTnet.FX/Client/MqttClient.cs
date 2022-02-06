@@ -64,6 +64,8 @@ namespace MQTTnet.Client
 
         public async Task<MqttClientAuthenticateResult> ConnectAsync(IMqttClientOptions options, CancellationToken cancellationToken)
         {
+            Console.WriteLine("[AAAAAAAAAA] : Connecting async");
+
             if (options == null) throw new ArgumentNullException(nameof(options));
             if (options.ChannelOptions == null) throw new ArgumentException("ChannelOptions are not set.");
 
@@ -80,21 +82,37 @@ namespace MQTTnet.Client
                 _packetIdentifierProvider.Reset();
                 _packetDispatcher.CancelAll();
 
+                Console.WriteLine("[AAAAAAAAAA] : Connecting async 2");
                 _backgroundCancellationTokenSource = new CancellationTokenSource();
                 var backgroundCancellationToken = _backgroundCancellationTokenSource.Token;
 
+                Console.WriteLine("[AAAAAAAAAA] : Connecting async 3");
                 _isDisconnectPending = 0;
+
+                if (_adapterFactory==null)
+                {
+                    Console.WriteLine("[AAAAAAAAAA] : Connecting async 3---1 , _adapterFactory is null");
+                }
                 var adapter = _adapterFactory.CreateClientAdapter(options);
                 _adapter = adapter;
 
+                Console.WriteLine("[AAAAAAAAAA] : Connecting async 4");
                 using (var combined = CancellationTokenSource.CreateLinkedTokenSource(backgroundCancellationToken, cancellationToken))
                 {
+
+                    Console.WriteLine("[AAAAAAAAAA] : Connecting async 5");
+
+
                     _logger.Verbose("Trying to connect with server '{0}' (Timeout={1}).", options.ChannelOptions, options.CommunicationTimeout);
                     await adapter.ConnectAsync(options.CommunicationTimeout, combined.Token).ConfigureAwait(false);
                     _logger.Verbose("Connection with server established.");
 
+                    Console.WriteLine("[AAAAAAAAAA] : Connecting async 6");
+
                     _publishPacketReceiverQueue = new AsyncQueue<MqttPublishPacket>();
                     _publishPacketReceiverTask = TaskEx.Run(() => ProcessReceivedPublishPackets(backgroundCancellationToken), backgroundCancellationToken);
+
+                    Console.WriteLine("[AAAAAAAAAA] : Connecting async 7");
 
                     _packetReceiverTask = TaskEx.Run(() => TryReceivePacketsAsync(backgroundCancellationToken), backgroundCancellationToken);
 
@@ -105,6 +123,8 @@ namespace MQTTnet.Client
 
                 if (Options.KeepAlivePeriod != TimeSpan.Zero)
                 {
+                    Console.WriteLine("[AAAAAAAAAA] : Connecting async 8");
+
                     _keepAlivePacketsSenderTask = TaskEx.Run(() => TrySendKeepAliveMessagesAsync(backgroundCancellationToken), backgroundCancellationToken);
                 }
 
@@ -112,9 +132,14 @@ namespace MQTTnet.Client
 
                 _logger.Info("Connected.");
 
+
+                Console.WriteLine("[AAAAAAAAAA] : Connecting async 9  connected");
+
                 var connectedHandler = ConnectedHandler;
                 if (connectedHandler != null)
                 {
+                    Console.WriteLine("[AAAAAAAAAA] : Connecting async 10");
+
                     await connectedHandler.HandleConnectedAsync(new MqttClientConnectedEventArgs(authenticateResult)).ConfigureAwait(false);
                 }
 
