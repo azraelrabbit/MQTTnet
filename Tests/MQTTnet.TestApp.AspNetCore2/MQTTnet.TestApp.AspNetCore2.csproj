@@ -9,10 +9,6 @@
     <Content Remove="wwwroot\app\app.ts" />
   </ItemGroup>
   
-  <ItemGroup>
-    <ProjectReference Include="..\..\Source\MQTTnet.AspnetCore\MQTTnet.AspNetCore.csproj" />
-  </ItemGroup>
-  
   <ItemGroup Condition="'$(TargetFramework)' != 'netcoreapp3.1'">
     <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />

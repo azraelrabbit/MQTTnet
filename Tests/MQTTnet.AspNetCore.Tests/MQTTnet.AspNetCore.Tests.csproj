@@ -22,7 +22,6 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\..\Source\MQTTnet.AspnetCore\MQTTnet.AspNetCore.csproj" />
     <ProjectReference Include="..\MQTTnet.Core.Tests\MQTTnet.Tests.csproj" />
   </ItemGroup>
 
