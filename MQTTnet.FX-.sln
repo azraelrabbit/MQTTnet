@@ -1,0 +1,89 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29009.5
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{32A630A7-2598-41D7-B625-204CD906F5FB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{67C28AC1-BC3A-420A-BE9C-FA2401431CF9}"
+	ProjectSection(SolutionItems) = preProject
+		Build\build.ps1 = Build\build.ps1
+		Build\MQTTnet.AspNetCore.nuspec = Build\MQTTnet.AspNetCore.nuspec
+		Build\MQTTnet.Extensions.ManagedClient.nuspec = Build\MQTTnet.Extensions.ManagedClient.nuspec
+		Build\MQTTnet.Extensions.Rpc.nuspec = Build\MQTTnet.Extensions.Rpc.nuspec
+		Build\MQTTnet.Extensions.WebSocket4Net.nuspec = Build\MQTTnet.Extensions.WebSocket4Net.nuspec
+		Build\MQTTnet.nuspec = Build\MQTTnet.nuspec
+		Build\upload.ps1 = Build\upload.ps1
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B3F60ECB-45BA-4C66-8903-8BB89CA67998}"
+	ProjectSection(SolutionItems) = preProject
+		.bettercodehub.yml = .bettercodehub.yml
+		.editorconfig = .editorconfig
+		appveyor.yml = appveyor.yml
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extensions", "Extensions", "{12816BCC-AF9E-44A9-9AE5-C246AF2A0587}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MQTTnet.FX", "MQTTnet.FX\MQTTnet.FX.csproj", "{48A72452-2AB4-4305-983A-F1A6B5A6EDD1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MQTTnet.Extensions.ManagedClient.FX", "MQTTnet.Extensions.ManagedClient.FX\MQTTnet.Extensions.ManagedClient.FX.csproj", "{17EDE362-612F-46F7-AC0D-2FE4263F280A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|ARM = Debug|ARM
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|ARM = Release|ARM
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{48A72452-2AB4-4305-983A-F1A6B5A6EDD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48A72452-2AB4-4305-983A-F1A6B5A6EDD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48A72452-2AB4-4305-983A-F1A6B5A6EDD1}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{48A72452-2AB4-4305-983A-F1A6B5A6EDD1}.Debug|ARM.Build.0 = Debug|Any CPU
+		{48A72452-2AB4-4305-983A-F1A6B5A6EDD1}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{48A72452-2AB4-4305-983A-F1A6B5A6EDD1}.Debug|x64.Build.0 = Debug|Any CPU
+		{48A72452-2AB4-4305-983A-F1A6B5A6EDD1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{48A72452-2AB4-4305-983A-F1A6B5A6EDD1}.Debug|x86.Build.0 = Debug|Any CPU
+		{48A72452-2AB4-4305-983A-F1A6B5A6EDD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48A72452-2AB4-4305-983A-F1A6B5A6EDD1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48A72452-2AB4-4305-983A-F1A6B5A6EDD1}.Release|ARM.ActiveCfg = Release|Any CPU
+		{48A72452-2AB4-4305-983A-F1A6B5A6EDD1}.Release|ARM.Build.0 = Release|Any CPU
+		{48A72452-2AB4-4305-983A-F1A6B5A6EDD1}.Release|x64.ActiveCfg = Release|Any CPU
+		{48A72452-2AB4-4305-983A-F1A6B5A6EDD1}.Release|x64.Build.0 = Release|Any CPU
+		{48A72452-2AB4-4305-983A-F1A6B5A6EDD1}.Release|x86.ActiveCfg = Release|Any CPU
+		{48A72452-2AB4-4305-983A-F1A6B5A6EDD1}.Release|x86.Build.0 = Release|Any CPU
+		{17EDE362-612F-46F7-AC0D-2FE4263F280A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17EDE362-612F-46F7-AC0D-2FE4263F280A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17EDE362-612F-46F7-AC0D-2FE4263F280A}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{17EDE362-612F-46F7-AC0D-2FE4263F280A}.Debug|ARM.Build.0 = Debug|Any CPU
+		{17EDE362-612F-46F7-AC0D-2FE4263F280A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{17EDE362-612F-46F7-AC0D-2FE4263F280A}.Debug|x64.Build.0 = Debug|Any CPU
+		{17EDE362-612F-46F7-AC0D-2FE4263F280A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{17EDE362-612F-46F7-AC0D-2FE4263F280A}.Debug|x86.Build.0 = Debug|Any CPU
+		{17EDE362-612F-46F7-AC0D-2FE4263F280A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17EDE362-612F-46F7-AC0D-2FE4263F280A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17EDE362-612F-46F7-AC0D-2FE4263F280A}.Release|ARM.ActiveCfg = Release|Any CPU
+		{17EDE362-612F-46F7-AC0D-2FE4263F280A}.Release|ARM.Build.0 = Release|Any CPU
+		{17EDE362-612F-46F7-AC0D-2FE4263F280A}.Release|x64.ActiveCfg = Release|Any CPU
+		{17EDE362-612F-46F7-AC0D-2FE4263F280A}.Release|x64.Build.0 = Release|Any CPU
+		{17EDE362-612F-46F7-AC0D-2FE4263F280A}.Release|x86.ActiveCfg = Release|Any CPU
+		{17EDE362-612F-46F7-AC0D-2FE4263F280A}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{48A72452-2AB4-4305-983A-F1A6B5A6EDD1} = {32A630A7-2598-41D7-B625-204CD906F5FB}
+		{17EDE362-612F-46F7-AC0D-2FE4263F280A} = {12816BCC-AF9E-44A9-9AE5-C246AF2A0587}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {07536672-5CBC-4BE3-ACE0-708A431A7894}
+	EndGlobalSection
+EndGlobal
