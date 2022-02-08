@@ -165,7 +165,9 @@ namespace MQTTnet.Implementations
                 // Workaround for: https://github.com/dotnet/corefx/issues/24430
                 using (cancellationToken.Register(_disposeAction))
                 {
-                    return await stream.ReadAsync(buffer, offset, count, cancellationToken).ConfigureAwait(false);
+                   var ret= await stream.ReadAsync(buffer, offset, count).ConfigureAwait(false);
+ 
+                    return ret;
                 }
 #endif
             }

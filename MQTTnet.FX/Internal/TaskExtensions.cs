@@ -1,6 +1,8 @@
 ﻿using MQTTnet.Diagnostics;
 using System.Threading.Tasks;
 using MQTTnet.Diagnostics.Logger;
+using System;
+using Nito.AsyncEx;
 
 namespace MQTTnet.Internal
 {
@@ -15,6 +17,18 @@ namespace MQTTnet.Internal
                     logger?.Error(exception, "Unhandled exception in background task.");
                 },
                 TaskContinuationOptions.OnlyOnFaulted);
+        }
+
+
+        public static async Task<bool> WaitAsync(this AsyncManualResetEvent waitHandle, int timeoutMs)
+        {
+            if (waitHandle == null)
+                throw new ArgumentNullException("waitHandle");
+
+            Task waitTask = waitHandle.WaitAsync();
+            Task completedTask = await TaskEx.WhenAny(TaskEx.Delay(timeoutMs), waitHandle.WaitAsync());
+
+            return completedTask == waitTask;
         }
     }
 }

@@ -15,7 +15,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MQTTnet.Diagnostics.Logger;
 using Nito.AsyncEx;
- 
+
 
 namespace MQTTnet.Extensions.ManagedClient
 {
@@ -36,11 +36,14 @@ namespace MQTTnet.Extensions.ManagedClient
         readonly HashSet<string> _unsubscriptions = new HashSet<string>();
         //readonly SemaphoreSlim _subscriptionsQueuedSignal = new SemaphoreSlim(0);
 
-        readonly AsyncSemaphoreSlim _subscriptionsQueuedSignal = new AsyncSemaphoreSlim(0);
+        //readonly AsyncSemaphoreSlim _subscriptionsQueuedSignal = new AsyncSemaphoreSlim(0);
+
+        //use AsyncManualResetEvent instead of  AsyncSemaphoreSlim  only for .net framework 4.0 ,with extension methods waitasync(timeout)
+        readonly AsyncManualResetEvent _subscriptionsQueuedSignal = new AsyncManualResetEvent(false);
 
         readonly MqttNetSourceLogger _logger;
 
-        readonly   AsyncLock _messageQueueLock = new AsyncLock();
+        readonly AsyncLock _messageQueueLock = new AsyncLock();
 
         CancellationTokenSource _connectionCancellationToken;
         CancellationTokenSource _publishingCancellationToken;
@@ -237,7 +240,9 @@ namespace MQTTnet.Extensions.ManagedClient
                 }
             }
 
-            _subscriptionsQueuedSignal.Release();
+            //_subscriptionsQueuedSignal.Release();
+
+            _subscriptionsQueuedSignal.Set();
 
             return TaskEx.FromResult(0);
         }
@@ -257,7 +262,9 @@ namespace MQTTnet.Extensions.ManagedClient
                 }
             }
 
-            _subscriptionsQueuedSignal.Release();
+            //_subscriptionsQueuedSignal.Release();
+
+            _subscriptionsQueuedSignal.Set();
 
             return TaskEx.FromResult(0);
         }
@@ -278,7 +285,9 @@ namespace MQTTnet.Extensions.ManagedClient
                 _messageQueue.Dispose();
                 //_messageQueueLock.Dispose();
                 InternalClient.Dispose();
-                _subscriptionsQueuedSignal.Dispose();
+                //_subscriptionsQueuedSignal.Dispose();
+
+                _subscriptionsQueuedSignal.Set();
             }
 
             base.Dispose(disposing);
@@ -482,11 +491,16 @@ namespace MQTTnet.Extensions.ManagedClient
             }
         }
 
+
+
+
         async Task PublishSubscriptionsAsync(TimeSpan timeout, CancellationToken cancellationToken)
         {
             var endTime = DateTime.UtcNow + timeout;
+            var tim = (int)GetRemainingTime(endTime).TotalMilliseconds;
+            while (await _subscriptionsQueuedSignal.WaitAsync(tim).ConfigureAwait(false))
+            //await _subscriptionsQueuedSignal.WaitAsync(cancellationToken).ConfigureAwait(false);
 
-            while (await _subscriptionsQueuedSignal.WaitAsync(GetRemainingTime(endTime), cancellationToken).ConfigureAwait(false))
             {
                 List<MqttTopicFilter> subscriptions;
                 HashSet<string> unsubscriptions;
@@ -495,12 +509,12 @@ namespace MQTTnet.Extensions.ManagedClient
                 {
                     subscriptions = _subscriptions.Select(i => new MqttTopicFilter
                     {
-                        Topic = i.Key, 
+                        Topic = i.Key,
                         QualityOfServiceLevel = i.Value
                     }).ToList();
-                    
+
                     _subscriptions.Clear();
-                    
+
                     unsubscriptions = new HashSet<string>(_unsubscriptions);
                     _unsubscriptions.Clear();
                 }
@@ -526,7 +540,7 @@ namespace MQTTnet.Extensions.ManagedClient
                 foreach (var subscription in subscriptions)
                 {
                     addedTopicFilters.Add(subscription);
-                    
+
                     if (addedTopicFilters.Count == Options.MaxTopicFiltersInSubscribeUnsubscribePackets)
                     {
                         await SendSubscribeUnsubscribe(addedTopicFilters, null).ConfigureAwait(false);
@@ -540,7 +554,7 @@ namespace MQTTnet.Extensions.ManagedClient
                 foreach (var unSub in unsubscriptions)
                 {
                     removedTopicFilters.Add(unSub);
-                    
+
                     if (removedTopicFilters.Count == Options.MaxTopicFiltersInSubscribeUnsubscribePackets)
                     {
                         await SendSubscribeUnsubscribe(null, removedTopicFilters).ConfigureAwait(false);
@@ -582,16 +596,16 @@ namespace MQTTnet.Extensions.ManagedClient
                 {
                     var subscriptions = _reconnectSubscriptions.Select(i => new MqttTopicFilter
                     {
-                        Topic = i.Key, 
+                        Topic = i.Key,
                         QualityOfServiceLevel = i.Value
                     });
-                    
+
                     var topicFilters = new List<MqttTopicFilter>();
-                    
+
                     foreach (var sub in subscriptions)
                     {
                         topicFilters.Add(sub);
-                        
+
                         if (topicFilters.Count == Options.MaxTopicFiltersInSubscribeUnsubscribePackets)
                         {
                             await SendSubscribeUnsubscribe(topicFilters, null).ConfigureAwait(false);

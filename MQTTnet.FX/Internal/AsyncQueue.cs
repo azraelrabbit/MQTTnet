@@ -9,8 +9,11 @@ namespace MQTTnet.Internal
     public sealed class AsyncQueue<TItem> : IDisposable
     {
         readonly object _syncRoot = new object();
-        AsyncSemaphoreSlim _semaphore = new AsyncSemaphoreSlim(0);
-        ConcurrentQueue<TItem> _queue = new ConcurrentQueue<TItem>();
+        //AsyncLock _semaphore = new AsyncLock(0);
+
+        Nito.AsyncEx.AsyncManualResetEvent _semaphore = new AsyncManualResetEvent(false);
+
+        ConcurrentQueue <TItem> _queue = new ConcurrentQueue<TItem>();
 
         public int Count => _queue.Count;
 
@@ -19,7 +22,10 @@ namespace MQTTnet.Internal
             lock (_syncRoot)
             {
                 _queue.Enqueue(item);
-                _semaphore?.Release();
+                //_semaphore?.Release();
+                _semaphore.Set();
+
+
             }
         }
 
@@ -37,7 +43,9 @@ namespace MQTTnet.Internal
                             return new AsyncQueueDequeueResult<TItem>(false, default);
                         }
 
-                        task = _semaphore.WaitAsync(cancellationToken);
+                        //task = _semaphore.WaitAsync(cancellationToken);
+
+                        task = _semaphore.WaitAsync();
                     }
                     
                     await task.ConfigureAwait(false);
@@ -85,7 +93,9 @@ namespace MQTTnet.Internal
         {
             lock (_syncRoot)
             {
-                _semaphore?.Dispose();
+                //_semaphore?.Dispose();
+
+                _semaphore.Set();
                 _semaphore = null;
             }
         }
