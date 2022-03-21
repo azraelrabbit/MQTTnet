@@ -72,8 +72,8 @@ namespace MQTTnet.Adapter
                 }
                 else
                 {
-                    await _channel.ConnectAsync(cancellationToken).ConfigureAwait(false);
-                    //await MqttTaskTimeout.WaitAsync(t => _channel.ConnectAsync(t), timeout, cancellationToken).ConfigureAwait(false);
+                    //await _channel.ConnectAsync(cancellationToken).ConfigureAwait(false);
+                    await MqttTaskTimeout.WaitAsync(t => _channel.ConnectAsync(t), timeout, cancellationToken).ConfigureAwait(false);
                 }
             }
             catch (Exception exception)
@@ -94,15 +94,15 @@ namespace MQTTnet.Adapter
 
             try
             {
-                //if (timeout == TimeSpan.Zero)
-                //{
+                if (timeout == TimeSpan.Zero)
+                {
                     await _channel.DisconnectAsync(cancellationToken).ConfigureAwait(false);
-                //}
-                //else
-                //{
-                //    await MqttTaskTimeout.WaitAsync(
-                //        t => _channel.DisconnectAsync(t), timeout, cancellationToken).ConfigureAwait(false);
-                //}
+                }
+                else
+                {
+                    await MqttTaskTimeout.WaitAsync(
+                        t => _channel.DisconnectAsync(t), timeout, cancellationToken).ConfigureAwait(false);
+                }
             }
             catch (Exception exception)
             {
@@ -216,7 +216,7 @@ namespace MQTTnet.Adapter
             if (disposing)
             {
                 _channel.Dispose();
-                //_syncRoot = null ;
+                //_syncRoot.Dispose();
             }
 
             base.Dispose(disposing);

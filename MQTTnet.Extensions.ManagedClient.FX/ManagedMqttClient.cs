@@ -122,9 +122,9 @@ namespace MQTTnet.Extensions.ManagedClient
             _connectionCancellationToken = cancellationTokenSource;
 
 
-            //_maintainConnectionTask =  MaintainConnectionAsync(cancellationToken);
+            //_maintainConnectionTask = MaintainConnectionAsync(cancellationToken);
 
-            _maintainConnectionTask = TaskEx.Run(async () => MaintainConnectionAsync(cancellationToken), cancellationToken);
+            _maintainConnectionTask = TaskEx.Run( () => MaintainConnectionAsync(cancellationToken), cancellationToken);
             _maintainConnectionTask.RunInBackground(_logger);
 
             _logger.Info("Started");
@@ -317,9 +317,9 @@ namespace MQTTnet.Extensions.ManagedClient
                     {
                         using (var disconnectTimeout = new CancellationTokenSource())
                         {
-                            //disconnectTimeout.CancelAfter(Options.ClientOptions.CommunicationTimeout);
-
-                            await InternalClient.DisconnectAsync(disconnectTimeout.Token).ConfigureAwait(false);
+                            disconnectTimeout.CancelAfter(Options.ClientOptions.CommunicationTimeout);
+                        
+                            await InternalClient.DisconnectAsync(new MqttClientDisconnectOptions(),disconnectTimeout.Token).ConfigureAwait(false);
                         }
                     }
                     catch (OperationCanceledException)

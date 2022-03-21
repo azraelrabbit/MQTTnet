@@ -141,13 +141,13 @@ namespace MQTTnet.Client
                     _logger.Verbose("Connection with server established.");
 
                     _publishPacketReceiverQueue = new AsyncQueue<MqttPublishPacket>();
-                    //_publishPacketReceiverTask = TaskEx.Run(() => ProcessReceivedPublishPackets(backgroundCancellationToken), backgroundCancellationToken);
+                    _publishPacketReceiverTask = TaskEx.Run(() => ProcessReceivedPublishPackets(backgroundCancellationToken), backgroundCancellationToken);
 
-                    //_packetReceiverTask = TaskEx.Run(() => TryReceivePacketsAsync(backgroundCancellationToken), backgroundCancellationToken);
+                    _packetReceiverTask = TaskEx.Run(() => TryReceivePacketsAsync(backgroundCancellationToken), backgroundCancellationToken);
 
-                    _publishPacketReceiverTask = ProcessReceivedPublishPackets(backgroundCancellationToken);
+                    //_publishPacketReceiverTask = ProcessReceivedPublishPackets(backgroundCancellationToken);
 
-                    _packetReceiverTask = TryReceivePacketsAsync(backgroundCancellationToken);
+                    //_packetReceiverTask = TryReceivePacketsAsync(backgroundCancellationToken);
 
                     connectResult = await AuthenticateAsync(adapter, options.WillMessage, combined.Token).ConfigureAwait(false);
                 }

@@ -14,7 +14,7 @@ namespace MQTTnet.Internal
             using (var timeoutCts = new CancellationTokenSource())
             using (var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(timeoutCts.Token, cancellationToken))
             {
-                //timeoutCts.CancelAfter(timeout);
+                timeoutCts.CancelAfter(timeout);
                 try
                 {
                     await action(linkedCts.Token).ConfigureAwait(false);
@@ -39,7 +39,7 @@ namespace MQTTnet.Internal
             using (var timeoutCts = new CancellationTokenSource())
             using (var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(timeoutCts.Token, cancellationToken))
             {
-                //timeoutCts.CancelAfter(timeout);
+                timeoutCts.CancelAfter(timeout);
                 try
                 {
                     return await action(linkedCts.Token).ConfigureAwait(false);
