@@ -99,9 +99,9 @@ namespace MQTTnet.Client
                     _logger.Verbose("Connection with server established.");
 
                     _publishPacketReceiverQueue = new AsyncQueue<MqttPublishPacket>();
-                    _publishPacketReceiverTask = TaskEx.Run(() => ProcessReceivedPublishPackets(backgroundCancellationToken), backgroundCancellationToken);
+                    _publishPacketReceiverTask = TaskEx.Run(async () => await ProcessReceivedPublishPackets(backgroundCancellationToken), backgroundCancellationToken);
 
-                    _packetReceiverTask = TaskEx.Run(() => TryReceivePacketsAsync(backgroundCancellationToken), backgroundCancellationToken);
+                    _packetReceiverTask = TaskEx.Run(async () => await TryReceivePacketsAsync(backgroundCancellationToken), backgroundCancellationToken);
 
                     connectResult = await AuthenticateAsync(adapter, options.WillMessage, combined.Token).ConfigureAwait(false);
                 }
@@ -110,7 +110,7 @@ namespace MQTTnet.Client
 
                 if (Options.KeepAlivePeriod != TimeSpan.Zero)
                 {
-                    _keepAlivePacketsSenderTask = TaskEx.Run(() => TrySendKeepAliveMessagesAsync(backgroundCancellationToken), backgroundCancellationToken);
+                    _keepAlivePacketsSenderTask = TaskEx.Run(async () => await TrySendKeepAliveMessagesAsync(backgroundCancellationToken), backgroundCancellationToken);
                 }
 
                 CompareExchangeConnectionStatus(MqttClientConnectionStatus.Connected, MqttClientConnectionStatus.Connecting);

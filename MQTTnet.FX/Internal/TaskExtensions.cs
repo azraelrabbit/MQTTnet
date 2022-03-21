@@ -1,4 +1,4 @@
-﻿using MQTTnet.Diagnostics;
+using MQTTnet.Diagnostics;
 using System.Threading.Tasks;
 using MQTTnet.Diagnostics.Logger;
 
@@ -8,6 +8,7 @@ namespace MQTTnet.Internal
     {
         public static void RunInBackground(this Task task, MqttNetSourceLogger logger = null)
         {
+            
             task?.ContinueWith(t =>
                 {
                     // Consume the exception first so that we get no exception regarding the not observed exception.

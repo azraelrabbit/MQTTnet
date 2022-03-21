@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading;
+using Nito.AsyncEx;
 
 namespace MQTTnet.Internal
 {
@@ -9,7 +10,9 @@ namespace MQTTnet.Internal
         readonly object _syncRoot = new object();
         readonly LinkedList<TItem> _items = new LinkedList<TItem>();
 
-        ManualResetEventSlim _gate = new ManualResetEventSlim(false);
+        //ManualResetEventSlim _gate = new ManualResetEventSlim(false);
+
+        Nito.AsyncEx.AsyncManualResetEvent _gate = new AsyncManualResetEvent(false);
 
         public int Count
         {
@@ -116,7 +119,7 @@ namespace MQTTnet.Internal
 
         public void Dispose()
         {
-            _gate?.Dispose();
+            //_gate?.Dispose();
             _gate = null;
         }
     }

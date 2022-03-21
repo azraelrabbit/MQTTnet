@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MQTTnet.Internal;
 using Nito.AsyncEx;
-using AsyncLock = MQTTnet.Internal.AsyncLock;
+//using AsyncLock = MQTTnet.Internal.AsyncLock;
 
 namespace MQTTnet.Extensions.ManagedClient
 {
@@ -32,7 +32,8 @@ namespace MQTTnet.Extensions.ManagedClient
         {
             if (applicationMessage == null) throw new ArgumentNullException(nameof(applicationMessage));
 
-            using (await _messagesLock.WaitAsync(CancellationToken.None).ConfigureAwait(false))
+            //using (await _messagesLock.WaitAsync(CancellationToken.None).ConfigureAwait(false))
+            using (await _messagesLock.LockAsync(CancellationToken.None).ConfigureAwait(false))
             {
                 _messages.Add(applicationMessage);
                 await SaveAsync().ConfigureAwait(false);
@@ -43,7 +44,8 @@ namespace MQTTnet.Extensions.ManagedClient
         {
             if (applicationMessage == null) throw new ArgumentNullException(nameof(applicationMessage));
 
-            using (await _messagesLock.WaitAsync(CancellationToken.None).ConfigureAwait(false))
+            //using (await _messagesLock.WaitAsync(CancellationToken.None).ConfigureAwait(false))
+            using (await _messagesLock.LockAsync(CancellationToken.None).ConfigureAwait(false))
             {
                 var index = _messages.IndexOf(applicationMessage);
                 if (index == -1)

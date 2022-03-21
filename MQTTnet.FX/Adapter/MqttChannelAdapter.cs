@@ -13,6 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MQTTnet.Diagnostics.Logger;
 using MQTTnet.Diagnostics.PacketInspection;
+using Nito.AsyncEx;
 
 namespace MQTTnet.Adapter
 {
@@ -71,7 +72,7 @@ namespace MQTTnet.Adapter
                 }
                 else
                 {
-                    await MqttTaskTimeout.WaitAsync(t => _channel.ConnectAsync(t), timeout, cancellationToken).ConfigureAwait(false);
+                    await MqttTaskTimeout.WaitAsync(async t => await _channel.ConnectAsync(t), timeout, cancellationToken).ConfigureAwait(false);
                 }
             }
             catch (Exception exception)
@@ -117,8 +118,8 @@ namespace MQTTnet.Adapter
         {
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
-
-            using (await _syncRoot.WaitAsync(cancellationToken).ConfigureAwait(false))
+            //using (await _syncRoot.WaitAsync(cancellationToken).ConfigureAwait(false))
+            using (await _syncRoot.LockAsync(cancellationToken).ConfigureAwait(false))
             {
                 // Check for cancellation here again because "WaitAsync" might take some time.
                 cancellationToken.ThrowIfCancellationRequested();
@@ -214,7 +215,7 @@ namespace MQTTnet.Adapter
             if (disposing)
             {
                 _channel.Dispose();
-                _syncRoot.Dispose();
+                //_syncRoot.Dispose();
             }
 
             base.Dispose(disposing);

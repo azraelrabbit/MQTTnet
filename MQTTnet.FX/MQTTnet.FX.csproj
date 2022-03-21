@@ -20,7 +20,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NET452</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NET452;NET40;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -28,7 +28,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;NET452</DefineConstants>
+    <DefineConstants>TRACE;NET452;NET40;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -177,7 +177,6 @@
     <Compile Include="Implementations\MqttTcpChannel.Uwp.cs" />
     <Compile Include="Implementations\PlatformAbstractionLayer.cs" />
     <Compile Include="IMqttFactory.cs" />
-    <Compile Include="Internal\AsyncLock.cs" />
     <Compile Include="Internal\AsyncQueue.cs" />
     <Compile Include="Internal\AsyncQueueDequeueResult.cs" />
     <Compile Include="Internal\BlockingQueue.cs" />

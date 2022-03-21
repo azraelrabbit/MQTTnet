@@ -7,6 +7,7 @@ using MQTTnet.Diagnostics;
 using MQTTnet.Diagnostics.Logger;
 using MQTTnet.Implementations;
 using MQTTnet.Internal;
+using Nito.AsyncEx;
 
 namespace MQTTnet.Server.Internal
 {
@@ -105,7 +106,8 @@ namespace MQTTnet.Server.Internal
                 {
                     if (_options.Storage != null)
                     {
-                        using (await _storageAccessLock.WaitAsync(CancellationToken.None).ConfigureAwait(false))
+                        //using (await _storageAccessLock.WaitAsync(CancellationToken.None).ConfigureAwait(false))
+                        using (await _storageAccessLock.LockAsync(CancellationToken.None).ConfigureAwait(false))
                         {
                             await _options.Storage.SaveRetainedMessagesAsync(messagesForSave).ConfigureAwait(false);
                         }
@@ -135,7 +137,8 @@ namespace MQTTnet.Server.Internal
 
             if (_options.Storage != null)
             {
-                using (await _storageAccessLock.WaitAsync(CancellationToken.None).ConfigureAwait(false))
+                //using (await _storageAccessLock.WaitAsync(CancellationToken.None).ConfigureAwait(false))
+                using (await _storageAccessLock.LockAsync(CancellationToken.None).ConfigureAwait(false))
                 {
                     await _options.Storage.SaveRetainedMessagesAsync(new List<MqttApplicationMessage>()).ConfigureAwait(false);
                 }

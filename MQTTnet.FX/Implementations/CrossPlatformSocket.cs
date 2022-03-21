@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.Remoting.Messaging;
 using System.Threading;
 using System.Threading.Tasks;
 using MQTTnet.Exceptions;
@@ -47,11 +48,11 @@ namespace MQTTnet.Implementations
             set => _socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.NoDelay, value ? 1 : 0);
         }
 
-        //public bool DualMode
-        //{
-        //    get => _socket.DualMode;
-        //    set => _socket.DualMode = value;
-        //}
+        public bool DualMode
+        {
+            get =>true;
+            //set => _socket. = value;
+        }
 
         public int ReceiveBufferSize
         {

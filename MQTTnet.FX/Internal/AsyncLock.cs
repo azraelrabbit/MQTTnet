@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Nito.AsyncEx;
 
 namespace MQTTnet.Internal
 {
@@ -9,10 +10,18 @@ namespace MQTTnet.Internal
         readonly object _syncRoot = new object();
         readonly Task<IDisposable> _releaser;
 
-        SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
+        //Nito.AsyncEx.AsyncLock al = new Nito.AsyncEx.AsyncLock();
+
+
+        //SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
+
+        //Nito.AsyncEx.AsyncSemaphore se=new AsyncSemaphore()
+
+        Nito.AsyncEx.AsyncSemaphoreSlim _semaphore = new AsyncSemaphoreSlim(1, 1);
 
         public AsyncLock()
         {
+         
             _releaser = TaskEx.FromResult((IDisposable)new Releaser(this));
         }
 
@@ -27,7 +36,9 @@ namespace MQTTnet.Internal
             // quite often when clients are disconnecting.
             lock (_syncRoot)
             {
-                task = TaskEx.Run(()=>_semaphore?.Wait(cancellationToken));
+                 
+                //task = TaskEx.Run(()=>_semaphore?.Wait(cancellationToken));
+                task = _semaphore?.WaitAsync(cancellationToken);
             }
 
             if (task == null)

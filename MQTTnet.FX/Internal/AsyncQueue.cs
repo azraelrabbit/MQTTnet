@@ -10,7 +10,9 @@ namespace MQTTnet.Internal
     {
         readonly object _syncRoot = new object();
         //SemaphoreSlim _semaphore = new SemaphoreSlim(0);
-        Nito.AsyncEx.AsyncSemaphoreSlim _semaphore = new AsyncSemaphoreSlim(0);
+        Nito.AsyncEx.AsyncSemaphore _semaphore = new AsyncSemaphore(0);
+
+        //Nito.AsyncEx.AsyncSemaphore se;
         //Nito.AsyncEx.AsyncManualResetEvent _semaphore = new AsyncManualResetEvent(false);
         ConcurrentQueue<TItem> _queue = new ConcurrentQueue<TItem>();
 
@@ -20,7 +22,8 @@ namespace MQTTnet.Internal
         {
             lock (_syncRoot)
             {
-                Nito.AsyncEx.AsyncSemaphoreSlim ap = new AsyncSemaphoreSlim(0);
+                
+                //Nito.AsyncEx.AsyncSemaphoreSlim ap = new AsyncSemaphoreSlim(0);
            
                 _queue.Enqueue(item);
                 _semaphore?.Release();
@@ -90,7 +93,7 @@ namespace MQTTnet.Internal
         {
             lock (_syncRoot)
             {
-                _semaphore?.Dispose();
+                //_semaphore?.Dispose();
                 _semaphore = null;
             }
         }

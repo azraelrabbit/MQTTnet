@@ -15,7 +15,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MQTTnet.Diagnostics.Logger;
 using Nito.AsyncEx;
-using AsyncLock = MQTTnet.Internal.AsyncLock;
+ 
 
 namespace MQTTnet.Extensions.ManagedClient
 {
@@ -116,7 +116,8 @@ namespace MQTTnet.Extensions.ManagedClient
             var cancellationToken = cancellationTokenSource.Token;
             _connectionCancellationToken = cancellationTokenSource;
 
-            _maintainConnectionTask = TaskEx.Run(() => MaintainConnectionAsync(cancellationToken), cancellationToken);
+            //_maintainConnectionTask= MaintainConnectionAsync(cancellationToken);//;
+            _maintainConnectionTask = TaskEx.Run(async () => await MaintainConnectionAsync(cancellationToken).ConfigureAwait(false), cancellationToken);
             _maintainConnectionTask.RunInBackground(_logger);
 
             _logger.Info("Started");
@@ -167,7 +168,8 @@ namespace MQTTnet.Extensions.ManagedClient
 
             try
             {
-                using (await _messageQueueLock.WaitAsync(CancellationToken.None).ConfigureAwait(false))
+                //using (await _messageQueueLock.WaitAsync(CancellationToken.None).ConfigureAwait(false))
+                using (await _messageQueueLock.LockAsync(CancellationToken.None).ConfigureAwait(false))
                 {
                     if (_messageQueue.Count >= Options.MaxPendingMessages)
                     {
@@ -271,7 +273,7 @@ namespace MQTTnet.Extensions.ManagedClient
                 }
 
                 _messageQueue.Dispose();
-                _messageQueueLock.Dispose();
+                //_messageQueueLock.Dispose();
                 InternalClient.Dispose();
                 _subscriptionsQueuedSignal.Dispose();
             }
@@ -417,7 +419,8 @@ namespace MQTTnet.Extensions.ManagedClient
             {
                 await InternalClient.PublishAsync(message.ApplicationMessage).ConfigureAwait(false);
 
-                using (await _messageQueueLock.WaitAsync(CancellationToken.None).ConfigureAwait(false)) //lock to avoid conflict with this.PublishAsync
+                //using (await _messageQueueLock.WaitAsync(CancellationToken.None).ConfigureAwait(false)) //lock to avoid conflict with this.PublishAsync
+                using (await _messageQueueLock.LockAsync(CancellationToken.None).ConfigureAwait(false)) //lock to avoid conflict with this.PublishAsync
                 {
                     // While publishing this message, this.PublishAsync could have booted this
                     // message off the queue to make room for another (when using a cap
@@ -448,7 +451,8 @@ namespace MQTTnet.Extensions.ManagedClient
                     //contradict the expected behavior of QoS 1 and 2, that's also true
                     //for the usage of a message queue cap, so it's still consistent
                     //with prior behavior in that way.
-                    using (await _messageQueueLock.WaitAsync(CancellationToken.None).ConfigureAwait(false)) //lock to avoid conflict with this.PublishAsync
+                    //using (await _messageQueueLock.WaitAsync(CancellationToken.None).ConfigureAwait(false)) //lock to avoid conflict with this.PublishAsync
+                    using (await _messageQueueLock.LockAsync(CancellationToken.None).ConfigureAwait(false)) //lock to avoid conflict with this.PublishAsync
                     {
                         _messageQueue.RemoveFirst(i => i.Id.Equals(message.Id));
 
@@ -648,7 +652,7 @@ namespace MQTTnet.Extensions.ManagedClient
             var cancellationToken = cancellationTokenSource.Token;
             _publishingCancellationToken = cancellationTokenSource;
 
-            TaskEx.Run(() => PublishQueuedMessagesAsync(cancellationToken), cancellationToken).RunInBackground(_logger);
+            TaskEx.Run(async () => await PublishQueuedMessagesAsync(cancellationToken), cancellationToken).RunInBackground(_logger);
         }
 
         void StopPublishing()

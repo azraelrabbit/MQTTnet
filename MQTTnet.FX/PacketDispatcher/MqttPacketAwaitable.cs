@@ -35,7 +35,7 @@ namespace MQTTnet.PacketDispatcher
             {
                 using (timeoutToken.Token.Register(() => Fail(new MqttCommunicationTimedOutException())))
                 {
-                    timeoutToken.CancelAfter(timeout);
+                    //timeoutToken.CancelAfter(timeout);
                     var packet = await _taskCompletionSource.Task.ConfigureAwait(false);
                     return (TPacket)packet;
                 }
@@ -52,7 +52,8 @@ namespace MQTTnet.PacketDispatcher
             // a new thread automatically (due to await). Furthermore _this_ thread will
             // do it. But _this_ thread is also reading incoming packets -> deadlock.
             // NET452 does not support RunContinuationsAsynchronously
-            TaskEx.Run(() => _taskCompletionSource.TrySetResult(packet));
+            TaskEx.Run(() => _taskCompletionSource.TrySetResult(packet)).ConfigureAwait(false);
+            //_taskCompletionSource.TrySetResult(packet);
 #else
             _taskCompletionSource.TrySetResult(packet);
 #endif

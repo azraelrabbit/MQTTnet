@@ -14,6 +14,7 @@ using MQTTnet.Internal;
 using MQTTnet.Packets;
 using MQTTnet.Protocol;
 using MQTTnet.Server.Status;
+using Nito.AsyncEx;
 
 namespace MQTTnet.Server.Internal
 {
@@ -70,7 +71,7 @@ namespace MQTTnet.Server.Internal
                 using (var effectiveCancellationToken =
                     CancellationTokenSource.CreateLinkedTokenSource(timeoutToken.Token, cancellationToken))
                 {
-                    timeoutToken.CancelAfter(_options.DefaultCommunicationTimeout);
+                    //timeoutToken.CancelAfter(_options.DefaultCommunicationTimeout);
                     var firstPacket = await channelAdapter.ReceivePacketAsync(effectiveCancellationToken.Token)
                         .ConfigureAwait(false);
 
@@ -521,7 +522,8 @@ namespace MQTTnet.Server.Internal
                 sessionShouldPersist = !connectPacket.CleanSession;
             }
 
-            using (await _createConnectionSyncRoot.WaitAsync(CancellationToken.None).ConfigureAwait(false))
+            using (await _createConnectionSyncRoot.LockAsync(CancellationToken.None).ConfigureAwait(false))
+            //using (await _createConnectionSyncRoot.WaitAsync(CancellationToken.None).ConfigureAwait(false))
             {
                 MqttClientSession session;
                 lock (_clientSessions)
