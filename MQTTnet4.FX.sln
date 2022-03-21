@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32126.315
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MQTTnet.FX", "MQTTnet.FX\MQTTnet.FX.csproj", "{F029ECF3-EF36-4A82-9D07-8107C1CFA379}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MQTTnet.Extensions.ManagedClient.FX", "MQTTnet.Extensions.ManagedClient.FX\MQTTnet.Extensions.ManagedClient.FX.csproj", "{311194E1-9215-4351-AAA2-65C4EC3A7D77}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F029ECF3-EF36-4A82-9D07-8107C1CFA379}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F029ECF3-EF36-4A82-9D07-8107C1CFA379}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F029ECF3-EF36-4A82-9D07-8107C1CFA379}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F029ECF3-EF36-4A82-9D07-8107C1CFA379}.Release|Any CPU.Build.0 = Release|Any CPU
+		{311194E1-9215-4351-AAA2-65C4EC3A7D77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{311194E1-9215-4351-AAA2-65C4EC3A7D77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{311194E1-9215-4351-AAA2-65C4EC3A7D77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{311194E1-9215-4351-AAA2-65C4EC3A7D77}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2534AA3D-322A-442D-ABB0-BAB44CFC1FC9}
+	EndGlobalSection
+EndGlobal
