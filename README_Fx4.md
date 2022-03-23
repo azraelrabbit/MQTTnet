@@ -17,6 +17,12 @@ This fork on branch : Branch_v3.1.2_FX and  FX4_v4 , just ported to .Net Framewo
 * The branch FX4_v4 based official master brach which on pre-release for now.
 * Both of those branches, removed websocket support and broker listen server support,it's only for mqtt tcp clients.
 
+---
+
+#### FOR NUGET PACKAGES
+* after 1.0.10 based Branch  FX4_v4
+* before 1.0.8 based on Branch Branch_v3.1.2_FX
+
 # MQTTnet
 
 MQTTnet is a high performance .NET library for MQTT based communication. It provides a MQTT client and a MQTT server (broker). The implementation is based on the documentation from <http://mqtt.org/>.

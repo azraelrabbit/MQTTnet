@@ -451,7 +451,7 @@ namespace MQTTnet.Server.Internal
 
                 using (var timeout = new CancellationTokenSource())
                 {
-                    //timeout.CancelAfter(_serverOptions.DefaultCommunicationTimeout);
+                    timeout.CancelAfter(_serverOptions.DefaultCommunicationTimeout);
                     await SendPacketAsync(disconnectPacket, timeout.Token).ConfigureAwait(false);
                 }
             }

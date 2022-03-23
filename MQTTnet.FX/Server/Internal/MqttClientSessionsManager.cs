@@ -71,7 +71,7 @@ namespace MQTTnet.Server.Internal
                 using (var effectiveCancellationToken =
                     CancellationTokenSource.CreateLinkedTokenSource(timeoutToken.Token, cancellationToken))
                 {
-                    //timeoutToken.CancelAfter(_options.DefaultCommunicationTimeout);
+                    timeoutToken.CancelAfter(_options.DefaultCommunicationTimeout);
                     var firstPacket = await channelAdapter.ReceivePacketAsync(effectiveCancellationToken.Token)
                         .ConfigureAwait(false);
 

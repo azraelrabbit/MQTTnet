@@ -35,7 +35,7 @@ namespace MQTTnet.PacketDispatcher
             {
                 using (timeoutToken.Token.Register(() => Fail(new MqttCommunicationTimedOutException())))
                 {
-                    //timeoutToken.CancelAfter(timeout);
+                    timeoutToken.CancelAfter(timeout);
                     var packet = await _taskCompletionSource.Task.ConfigureAwait(false);
                     return (TPacket)packet;
                 }
