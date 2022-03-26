@@ -9,6 +9,16 @@ using MQTTnet.Exceptions;
 
 namespace MQTTnet.Implementations
 {
+    //public sealed class CrossPlatformSocket : Socket
+    //{
+    //    public CrossPlatformSocket(AddressFamily addressFamily, SocketType socketType, ProtocolType protocolType) : base(addressFamily, socketType, protocolType)
+    //    {
+    //    }
+
+    //    public CrossPlatformSocket(SocketInformation socketInformation) : base(socketInformation)
+    //    {
+    //    }
+    //}
     public sealed class CrossPlatformSocket : IDisposable
     {
         readonly Socket _socket;
@@ -26,7 +36,7 @@ namespace MQTTnet.Implementations
         {
             // Having this constructor is important because avoiding the address family as parameter
             // will make use of dual mode in the .net framework.
-            _socket = new Socket(AddressFamily.InterNetwork,SocketType.Stream, ProtocolType.Tcp);
+            _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
             _socketDisposeAction = _socket.Dispose;
         }
@@ -44,13 +54,13 @@ namespace MQTTnet.Implementations
             // We cannot use the _NoDelay_ property from the socket because there is an issue in .NET 4.5.2, 4.6.
             // The decompiled code is: this.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.Debug, value ? 1 : 0);
             // Which is wrong because the "NoDelay" should be set and not "Debug".
-            get => (int)_socket.GetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.NoDelay) > 0;
-            set => _socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.NoDelay, value ? 1 : 0);
+            get => _socket.NoDelay;
+            set => _socket.NoDelay = value;
         }
 
         public bool DualMode
         {
-            get =>true;
+            get => true;
             //set => _socket. = value;
         }
 
@@ -59,7 +69,7 @@ namespace MQTTnet.Implementations
             get => _socket.ReceiveBufferSize;
             set => _socket.ReceiveBufferSize = value;
         }
-        
+
         public int SendBufferSize
         {
             get => _socket.SendBufferSize;
@@ -76,8 +86,11 @@ namespace MQTTnet.Implementations
 
         public bool ReuseAddress
         {
-            get => (int)_socket.GetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress) != 0;
-            set => _socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, value ? 1 : 0);
+            //get => (int)_socket.GetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress) != 0;
+            //set => _socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, value ? 1 : 0);
+
+            get => _socket.ExclusiveAddressUse;
+            set => _socket.ExclusiveAddressUse = value;
         }
 
         public async Task<CrossPlatformSocket> AcceptAsync()
@@ -85,11 +98,16 @@ namespace MQTTnet.Implementations
             try
             {
 #if NET452 || NET461
+
                 var clientSocket = await Task.Factory.FromAsync(_socket.BeginAccept, _socket.EndAccept, null).ConfigureAwait(false);
-#else
-                var clientSocket = await _socket.AcceptAsync().ConfigureAwait(false);
-#endif
+
                 return new CrossPlatformSocket(clientSocket);
+
+#else
+                    var clientSocket = await _socket.AcceptAsync().ConfigureAwait(false);
+                    return new CrossPlatformSocket(clientSocket);
+#endif
+
             }
             catch (ObjectDisposedException)
             {
@@ -125,10 +143,24 @@ namespace MQTTnet.Implementations
 
 #if NET452 || NET461
                     await Task.Factory.FromAsync(_socket.BeginConnect, _socket.EndConnect, host, port, null).ConfigureAwait(false);
+
+                    //  _socket.BeginConnect(host, port, new AsyncCallback(ar =>
+                    //{
+                    //    if (ar.IsCompleted)
+                    //    {
+                    //        _socket.EndConnect(ar);
+
+                    //        _networkStream = new NetworkStream(_socket, true);
+                    //    }
+
+                    //}), cancellationToken).AsyncWaitHandle.WaitOne();
+
+                    //  await TaskEx.FromResult(0);
 #else
-                    await _socket.ConnectAsync(host, port).ConfigureAwait(false);
+                        await _socket.ConnectAsync(host, port).ConfigureAwait(false);
+                        _networkStream = new NetworkStream(_socket, true);
 #endif
-                    _networkStream = new NetworkStream(_socket, true);
+
                 }
             }
             catch (SocketException socketException)
@@ -152,9 +184,10 @@ namespace MQTTnet.Implementations
             try
             {
 #if NET452 || NET461
+               
                 await Task.Factory.FromAsync(SocketWrapper.BeginSend, _socket.EndSend, new SocketWrapper(_socket, buffer, socketFlags)).ConfigureAwait(false);
 #else
-                await _socket.SendAsync(buffer, socketFlags).ConfigureAwait(false);
+                    await _socket.SendAsync(buffer, socketFlags).ConfigureAwait(false);
 #endif
             }
             catch (ObjectDisposedException)
@@ -170,7 +203,7 @@ namespace MQTTnet.Implementations
 #if NET452 || NET461
                 return await Task.Factory.FromAsync(SocketWrapper.BeginReceive, _socket.EndReceive, new SocketWrapper(_socket, buffer, socketFlags)).ConfigureAwait(false);
 #else
-                return await _socket.ReceiveAsync(buffer, socketFlags).ConfigureAwait(false);
+                    return await _socket.ReceiveAsync(buffer, socketFlags).ConfigureAwait(false);
 #endif
             }
             catch (ObjectDisposedException)
